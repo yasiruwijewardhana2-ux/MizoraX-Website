@@ -87,10 +87,13 @@ function createMovieCard(movie) {
 
   return `
     <div class="movie-card premium-glass rounded-xl overflow-hidden relative group cursor-pointer h-[220px] sm:h-[280px] md:h-[340px]" onclick="window.location.href='movie-details.html?id=${movie.id}'">
-      <img src="${movie.poster}" alt="${movie.title}" loading="lazy" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
-      
+      <img src="${movie.poster}" alt="${movie.title}" loading="lazy" class="w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-110">
+
+      <!-- Top glass sheen -->
+      <div class="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/50 to-transparent z-10 pointer-events-none"></div>
+
       <!-- Top Badges -->
-      <div class="absolute top-2 left-2 right-2 flex justify-between z-20 pointer-events-none">
+      <div class="absolute top-2.5 left-2.5 right-2.5 flex justify-between z-20 pointer-events-none">
           <div class="flex items-center gap-1.5">
             ${qualityBadge}
             <div class="bg-black bg-opacity-70 backdrop-blur px-2 py-1 rounded border border-cyber-border flex items-center">
@@ -104,29 +107,29 @@ function createMovieCard(movie) {
       </div>
 
       <!-- Hover Overlay Content -->
-      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90 transition duration-500 z-10 pointer-events-none group-hover:opacity-100"></div>
-      
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90 transition-opacity duration-300 z-10 pointer-events-none group-hover:opacity-100"></div>
+
       <div class="hover-content absolute inset-0 flex flex-col justify-center items-center z-20 p-4">
-          <div class="w-14 h-14 rounded-full btn-neon-blue flex items-center justify-center mb-4 transform scale-90 group-hover:scale-100 transition duration-300 play-btn-pulse">
+          <div class="w-14 h-14 rounded-full btn-neon-blue flex items-center justify-center mb-4 transform scale-90 group-hover:scale-100 transition-transform duration-300 play-btn-pulse">
              <svg class="w-6 h-6 ml-1 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6z"></path></svg>
           </div>
-          <p class="text-[10px] text-gray-400 font-mono tracking-widest mb-3 uppercase">${movie.genre || movie.category}</p>
+          <p class="text-[10px] text-gray-400 font-mono tracking-widest mb-3 uppercase text-center px-2">${movie.genre || movie.category}</p>
           <button class="px-5 py-1.5 text-xs font-display border border-white rounded-full bg-white bg-opacity-10 hover:bg-opacity-30 transition font-bold tracking-widest backdrop-blur-sm">DETAILS</button>
       </div>
 
       <!-- Base Content (Always visible at bottom) -->
-      <div class="absolute bottom-0 w-full p-3 sm:p-4 z-20 transition duration-500 group-hover:opacity-0">
+      <div class="absolute bottom-0 w-full p-3 sm:p-4 z-20 transition-opacity duration-300 group-hover:opacity-0">
         <h3 class="text-xs sm:text-sm md:text-base font-bold font-display text-white truncate drop-shadow-lg">${movie.title}</h3>
         <div class="flex justify-between items-center mt-2">
-          <span class="text-[10px] text-gray-300 font-bold bg-black bg-opacity-50 px-1.5 rounded">${movie.year}</span>
+          <span class="text-[10px] text-gray-300 font-bold bg-black bg-opacity-50 px-1.5 py-0.5 rounded">${movie.year}</span>
           <span class="text-[8px] sm:text-[9px] px-1.5 py-0.5 rounded border ${getCategoryColors(movie.category)} uppercase tracking-wider font-bold backdrop-blur-md">
             ${movie.category}
           </span>
         </div>
       </div>
-      
+
       <!-- Border Glow -->
-      <div class="absolute inset-0 border border-transparent group-hover:border-cyber-blue rounded-xl transition duration-500 pointer-events-none z-30"></div>
+      <div class="absolute inset-0 border border-transparent group-hover:border-cyber-blue rounded-xl transition-colors duration-300 pointer-events-none z-30"></div>
     </div>
   `;
 }
@@ -136,6 +139,7 @@ function getCategoryColors(category) {
     if (category === 'Cartoons') return 'bg-cyber-blue bg-opacity-20 text-cyber-blue border-cyber-blue';
     if (category === 'Movies') return 'bg-green-500 bg-opacity-20 text-green-400 border-green-500';
     if (category === 'TV Series') return 'bg-pink-500 bg-opacity-20 text-pink-400 border-pink-500';
+    if (category === 'Books') return 'bg-amber-500 bg-opacity-20 text-amber-400 border-amber-500';
     return 'bg-gray-500 bg-opacity-20 text-gray-400 border-gray-500';
 }
 

@@ -4,13 +4,16 @@ class MovieService {
   }
 
   async init() {
+    const DATA_VERSION = '2'; // bump when generateExpandedData() catalog changes (e.g. new categories)
     try {
       const stored = localStorage.getItem('mizorax_movies');
-      if (stored) {
+      const storedVersion = localStorage.getItem('mizorax_data_version');
+      if (stored && storedVersion === DATA_VERSION) {
         this.movies = JSON.parse(stored);
       } else {
         this.movies = this.generateExpandedData();
         localStorage.setItem('mizorax_movies', JSON.stringify(this.movies));
+        localStorage.setItem('mizorax_data_version', DATA_VERSION);
       }
     } catch (e) {
       console.error("Failed to load movies", e);
@@ -192,6 +195,44 @@ class MovieService {
         description: "After a global pandemic destroys civilization, a hardened survivor takes charge of a 14-year-old girl who may be humanity's last hope.",
         year: 2023, rating: 9.3, featured: false, trending: true,
         trailerUrl: "", streamUrl: "#"
+      },
+
+      // === BOOKS (Books, Manga, Comics, Light Novels) ===
+      {
+        id: 13, title: "Berserk", category: "Books", type: "Manga",
+        genre: "Dark Fantasy, Action, Tragedy", duration: "40 Volumes", quality: "Digital HD",
+        poster: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500&q=80",
+        banner: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=1920&q=80",
+        description: "Guts, a lone mercenary bearing a colossal sword, seeks vengeance against the demonic forces that shattered his life. A landmark work of dark fantasy manga.",
+        year: 1989, rating: 9.9, featured: true, trending: true,
+        trailerUrl: "", streamUrl: "#"
+      },
+      {
+        id: 14, title: "The Name of the Wind", category: "Books", type: "Novel",
+        genre: "Fantasy, Adventure, Epic", duration: "662 Pages", quality: "Digital HD",
+        poster: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=500&q=80",
+        banner: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=1920&q=80",
+        description: "The legendary wizard Kvothe recounts his own extraordinary story, from a troubled childhood to his rise as the most notorious magician his world has ever seen.",
+        year: 2007, rating: 9.5, featured: true, trending: false,
+        trailerUrl: "", streamUrl: "#"
+      },
+      {
+        id: 15, title: "Solo Leveling", category: "Books", type: "Light Novel",
+        genre: "Action, Fantasy, Progression", duration: "14 Volumes", quality: "Digital HD",
+        poster: "https://images.unsplash.com/photo-1531901599143-df5010ab9438?w=500&q=80",
+        banner: "https://images.unsplash.com/photo-1531901599143-df5010ab9438?w=1920&q=80",
+        description: "In a world where hunters battle monstrous gates, the weakest hunter alive is granted a mysterious system that lets him grow stronger without limit.",
+        year: 2016, rating: 9.6, featured: false, trending: true,
+        trailerUrl: "", streamUrl: "#"
+      },
+      {
+        id: 16, title: "Watchmen", category: "Books", type: "Comic",
+        genre: "Superhero, Mystery, Noir", duration: "12 Issues", quality: "Digital HD",
+        poster: "https://images.unsplash.com/photo-1601645191163-3fc0d5d64e35?w=500&q=80",
+        banner: "https://images.unsplash.com/photo-1601645191163-3fc0d5d64e35?w=1920&q=80",
+        description: "A gritty, groundbreaking deconstruction of the superhero genre, following a disparate group of retired vigilantes investigating a murder that unravels a global conspiracy.",
+        year: 1986, rating: 9.7, featured: false, trending: true,
+        trailerUrl: "", streamUrl: "#"
       }
     ];
 
@@ -200,20 +241,23 @@ class MovieService {
       { cat: "Anime", genres: ["Action, Fantasy", "Mecha, Sci-Fi", "Supernatural, Adventure", "Romance, Drama"] },
       { cat: "Movies", genres: ["Action, Thriller", "Sci-Fi, Drama", "Fantasy, Adventure", "Crime, Mystery"] },
       { cat: "TV Series", genres: ["Drama, Thriller", "Sci-Fi, Mystery", "Horror, Suspense", "Comedy, Drama"] },
-      { cat: "Cartoons", genres: ["Animation, Adventure", "Comedy, Family", "Action, Sci-Fi", "Fantasy, Musical"] }
+      { cat: "Cartoons", genres: ["Animation, Adventure", "Comedy, Family", "Action, Sci-Fi", "Fantasy, Musical"] },
+      { cat: "Books", genres: ["Manga, Action", "Light Novel, Fantasy", "Comic, Superhero", "Novel, Drama"] }
     ];
 
-    for (let i = 13; i <= 40; i++) {
-      const tpl = templates[(i - 13) % templates.length];
+    for (let i = 17; i <= 46; i++) {
+      const tpl = templates[(i - 17) % templates.length];
       const genre = tpl.genres[Math.floor(Math.random() * tpl.genres.length)];
+      const isBooks = tpl.cat === "Books";
+      const bookTypes = ["Manga", "Light Novel", "Comic", "Novel"];
       data.push({
         id: i,
         title: `${tpl.cat} Collection ${i}`,
         category: tpl.cat,
-        type: i % 3 === 0 ? "Movie" : "Series",
+        type: isBooks ? bookTypes[i % bookTypes.length] : (i % 3 === 0 ? "Movie" : "Series"),
         genre: genre,
-        duration: i % 3 === 0 ? `${90 + Math.floor(Math.random() * 60)}m` : `${20 + Math.floor(Math.random() * 30)}m/ep`,
-        quality: i % 2 === 0 ? "4K HDR" : "HD",
+        duration: isBooks ? `${5 + (i % 20)} Volumes` : (i % 3 === 0 ? `${90 + Math.floor(Math.random() * 60)}m` : `${20 + Math.floor(Math.random() * 30)}m/ep`),
+        quality: isBooks ? "Digital HD" : (i % 2 === 0 ? "4K HDR" : "HD"),
         poster: `https://picsum.photos/seed/mx${i}/500/750`,
         banner: `https://picsum.photos/seed/mx${i}/1920/1080`,
         description: `A premium ${tpl.cat.toLowerCase()} experience featuring exceptional storytelling, stunning visuals, and unforgettable characters. Stream now exclusively on MizoraX.`,
